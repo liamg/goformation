@@ -1,4 +1,4 @@
-package apigateway
+package wafv2
 
 import (
 	"bytes"
@@ -6,52 +6,31 @@ import (
 	"fmt"
 
 	"github.com/awslabs/goformation/v5/cloudformation/policies"
-	"github.com/awslabs/goformation/v5/cloudformation/tags"
 )
 
-// DomainName AWS CloudFormation Resource (AWS::ApiGateway::DomainName)
-// See: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-apigateway-domainname.html
-type DomainName struct {
+// LoggingConfiguration AWS CloudFormation Resource (AWS::WAFv2::LoggingConfiguration)
+// See: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-wafv2-loggingconfiguration.html
+type LoggingConfiguration struct {
 
-	// CertificateArn AWS CloudFormation Property
-	// Required: false
-	// See: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-apigateway-domainname.html#cfn-apigateway-domainname-certificatearn
-	CertificateArn string `json:"CertificateArn,omitempty"`
+	// LogDestinationConfigs AWS CloudFormation Property
+	// Required: true
+	// See: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-wafv2-loggingconfiguration.html#cfn-wafv2-loggingconfiguration-logdestinationconfigs
+	LogDestinationConfigs []string `json:"LogDestinationConfigs,omitempty"`
 
-	// DomainName AWS CloudFormation Property
+	// LoggingFilter AWS CloudFormation Property
 	// Required: false
-	// See: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-apigateway-domainname.html#cfn-apigateway-domainname-domainname
-	DomainName string `json:"DomainName,omitempty"`
+	// See: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-wafv2-loggingconfiguration.html#cfn-wafv2-loggingconfiguration-loggingfilter
+	LoggingFilter interface{} `json:"LoggingFilter,omitempty"`
 
-	// EndpointConfiguration AWS CloudFormation Property
+	// RedactedFields AWS CloudFormation Property
 	// Required: false
-	// See: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-apigateway-domainname.html#cfn-apigateway-domainname-endpointconfiguration
-	EndpointConfiguration *DomainName_EndpointConfiguration `json:"EndpointConfiguration,omitempty"`
+	// See: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-wafv2-loggingconfiguration.html#cfn-wafv2-loggingconfiguration-redactedfields
+	RedactedFields []LoggingConfiguration_FieldToMatch `json:"RedactedFields,omitempty"`
 
-	// MutualTlsAuthentication AWS CloudFormation Property
-	// Required: false
-	// See: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-apigateway-domainname.html#cfn-apigateway-domainname-mutualtlsauthentication
-	MutualTlsAuthentication *DomainName_MutualTlsAuthentication `json:"MutualTlsAuthentication,omitempty"`
-
-	// OwnershipVerificationCertificateArn AWS CloudFormation Property
-	// Required: false
-	// See: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-apigateway-domainname.html#cfn-apigateway-domainname-ownershipverificationcertificatearn
-	OwnershipVerificationCertificateArn string `json:"OwnershipVerificationCertificateArn,omitempty"`
-
-	// RegionalCertificateArn AWS CloudFormation Property
-	// Required: false
-	// See: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-apigateway-domainname.html#cfn-apigateway-domainname-regionalcertificatearn
-	RegionalCertificateArn string `json:"RegionalCertificateArn,omitempty"`
-
-	// SecurityPolicy AWS CloudFormation Property
-	// Required: false
-	// See: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-apigateway-domainname.html#cfn-apigateway-domainname-securitypolicy
-	SecurityPolicy string `json:"SecurityPolicy,omitempty"`
-
-	// Tags AWS CloudFormation Property
-	// Required: false
-	// See: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-apigateway-domainname.html#cfn-apigateway-domainname-tags
-	Tags []tags.Tag `json:"Tags,omitempty"`
+	// ResourceArn AWS CloudFormation Property
+	// Required: true
+	// See: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-wafv2-loggingconfiguration.html#cfn-wafv2-loggingconfiguration-resourcearn
+	ResourceArn string `json:"ResourceArn,omitempty"`
 
 	// AWSCloudFormationDeletionPolicy represents a CloudFormation DeletionPolicy
 	AWSCloudFormationDeletionPolicy policies.DeletionPolicy `json:"-"`
@@ -70,14 +49,14 @@ type DomainName struct {
 }
 
 // AWSCloudFormationType returns the AWS CloudFormation resource type
-func (r *DomainName) AWSCloudFormationType() string {
-	return "AWS::ApiGateway::DomainName"
+func (r *LoggingConfiguration) AWSCloudFormationType() string {
+	return "AWS::WAFv2::LoggingConfiguration"
 }
 
 // MarshalJSON is a custom JSON marshalling hook that embeds this object into
 // an AWS CloudFormation JSON resource's 'Properties' field and adds a 'Type'.
-func (r DomainName) MarshalJSON() ([]byte, error) {
-	type Properties DomainName
+func (r LoggingConfiguration) MarshalJSON() ([]byte, error) {
+	type Properties LoggingConfiguration
 	return json.Marshal(&struct {
 		Type                string
 		Properties          Properties
@@ -99,8 +78,8 @@ func (r DomainName) MarshalJSON() ([]byte, error) {
 
 // UnmarshalJSON is a custom JSON unmarshalling hook that strips the outer
 // AWS CloudFormation resource object, and just keeps the 'Properties' field.
-func (r *DomainName) UnmarshalJSON(b []byte) error {
-	type Properties DomainName
+func (r *LoggingConfiguration) UnmarshalJSON(b []byte) error {
+	type Properties LoggingConfiguration
 	res := &struct {
 		Type                string
 		Properties          *Properties
@@ -121,7 +100,7 @@ func (r *DomainName) UnmarshalJSON(b []byte) error {
 
 	// If the resource has no Properties set, it could be nil
 	if res.Properties != nil {
-		*r = DomainName(*res.Properties)
+		*r = LoggingConfiguration(*res.Properties)
 	}
 	if res.DependsOn != nil {
 		r.AWSCloudFormationDependsOn = res.DependsOn

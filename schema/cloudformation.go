@@ -2590,6 +2590,9 @@ var CloudformationSchema = `{
                         "MutualTlsAuthentication": {
                             "$ref": "#/definitions/AWS::ApiGateway::DomainName.MutualTlsAuthentication"
                         },
+                        "OwnershipVerificationCertificateArn": {
+                            "type": "string"
+                        },
                         "RegionalCertificateArn": {
                             "type": "string"
                         },
@@ -4470,6 +4473,9 @@ var CloudformationSchema = `{
                     "type": "string"
                 },
                 "EndpointType": {
+                    "type": "string"
+                },
+                "OwnershipVerificationCertificateArn": {
                     "type": "string"
                 },
                 "SecurityPolicy": {
@@ -20777,6 +20783,9 @@ var CloudformationSchema = `{
                         "QueuedTimeoutInMinutes": {
                             "type": "number"
                         },
+                        "ResourceAccessRole": {
+                            "type": "string"
+                        },
                         "SecondaryArtifacts": {
                             "items": {
                                 "$ref": "#/definitions/AWS::CodeBuild::Project.Artifacts"
@@ -20815,6 +20824,9 @@ var CloudformationSchema = `{
                         },
                         "Triggers": {
                             "$ref": "#/definitions/AWS::CodeBuild::Project.ProjectTriggers"
+                        },
+                        "Visibility": {
+                            "type": "string"
                         },
                         "VpcConfig": {
                             "$ref": "#/definitions/AWS::CodeBuild::Project.VpcConfig"
@@ -47761,6 +47773,15 @@ var CloudformationSchema = `{
             },
             "type": "object"
         },
+        "AWS::Elasticsearch::Domain.ColdStorageOptions": {
+            "additionalProperties": false,
+            "properties": {
+                "Enabled": {
+                    "type": "boolean"
+                }
+            },
+            "type": "object"
+        },
         "AWS::Elasticsearch::Domain.DomainEndpointOptions": {
             "additionalProperties": false,
             "properties": {
@@ -47803,6 +47824,9 @@ var CloudformationSchema = `{
         "AWS::Elasticsearch::Domain.ElasticsearchClusterConfig": {
             "additionalProperties": false,
             "properties": {
+                "ColdStorageOptions": {
+                    "$ref": "#/definitions/AWS::Elasticsearch::Domain.ColdStorageOptions"
+                },
                 "DedicatedMasterCount": {
                     "type": "number"
                 },
@@ -63445,6 +63469,21 @@ var CloudformationSchema = `{
             ],
             "type": "object"
         },
+        "AWS::IoTAnalytics::Datastore.CustomerManagedS3Storage": {
+            "additionalProperties": false,
+            "properties": {
+                "Bucket": {
+                    "type": "string"
+                },
+                "KeyPrefix": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "Bucket"
+            ],
+            "type": "object"
+        },
         "AWS::IoTAnalytics::Datastore.DatastorePartition": {
             "additionalProperties": false,
             "properties": {
@@ -63475,6 +63514,9 @@ var CloudformationSchema = `{
                 "CustomerManagedS3": {
                     "$ref": "#/definitions/AWS::IoTAnalytics::Datastore.CustomerManagedS3"
                 },
+                "IotSiteWiseMultiLayerStorage": {
+                    "$ref": "#/definitions/AWS::IoTAnalytics::Datastore.IotSiteWiseMultiLayerStorage"
+                },
                 "ServiceManagedS3": {
                     "$ref": "#/definitions/AWS::IoTAnalytics::Datastore.ServiceManagedS3"
                 }
@@ -63491,6 +63533,18 @@ var CloudformationSchema = `{
                     "$ref": "#/definitions/AWS::IoTAnalytics::Datastore.ParquetConfiguration"
                 }
             },
+            "type": "object"
+        },
+        "AWS::IoTAnalytics::Datastore.IotSiteWiseMultiLayerStorage": {
+            "additionalProperties": false,
+            "properties": {
+                "CustomerManagedS3Storage": {
+                    "$ref": "#/definitions/AWS::IoTAnalytics::Datastore.CustomerManagedS3Storage"
+                }
+            },
+            "required": [
+                "CustomerManagedS3Storage"
+            ],
             "type": "object"
         },
         "AWS::IoTAnalytics::Datastore.JsonConfiguration": {
@@ -108469,6 +108523,105 @@ var CloudformationSchema = `{
             ],
             "type": "object"
         },
+        "AWS::WAFv2::LoggingConfiguration": {
+            "additionalProperties": false,
+            "properties": {
+                "DeletionPolicy": {
+                    "enum": [
+                        "Delete",
+                        "Retain",
+                        "Snapshot"
+                    ],
+                    "type": "string"
+                },
+                "DependsOn": {
+                    "anyOf": [
+                        {
+                            "pattern": "^[a-zA-Z0-9]+$",
+                            "type": "string"
+                        },
+                        {
+                            "items": {
+                                "pattern": "^[a-zA-Z0-9]+$",
+                                "type": "string"
+                            },
+                            "type": "array"
+                        }
+                    ]
+                },
+                "Metadata": {
+                    "type": "object"
+                },
+                "Properties": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "LogDestinationConfigs": {
+                            "items": {
+                                "type": "string"
+                            },
+                            "type": "array"
+                        },
+                        "LoggingFilter": {
+                            "type": "object"
+                        },
+                        "RedactedFields": {
+                            "items": {
+                                "$ref": "#/definitions/AWS::WAFv2::LoggingConfiguration.FieldToMatch"
+                            },
+                            "type": "array"
+                        },
+                        "ResourceArn": {
+                            "type": "string"
+                        }
+                    },
+                    "required": [
+                        "LogDestinationConfigs",
+                        "ResourceArn"
+                    ],
+                    "type": "object"
+                },
+                "Type": {
+                    "enum": [
+                        "AWS::WAFv2::LoggingConfiguration"
+                    ],
+                    "type": "string"
+                },
+                "UpdateReplacePolicy": {
+                    "enum": [
+                        "Delete",
+                        "Retain",
+                        "Snapshot"
+                    ],
+                    "type": "string"
+                }
+            },
+            "required": [
+                "Type",
+                "Properties"
+            ],
+            "type": "object"
+        },
+        "AWS::WAFv2::LoggingConfiguration.FieldToMatch": {
+            "additionalProperties": false,
+            "properties": {
+                "JsonBody": {
+                    "type": "object"
+                },
+                "Method": {
+                    "type": "object"
+                },
+                "QueryString": {
+                    "type": "object"
+                },
+                "SingleHeader": {
+                    "type": "object"
+                },
+                "UriPath": {
+                    "type": "object"
+                }
+            },
+            "type": "object"
+        },
         "AWS::WAFv2::RegexPatternSet": {
             "additionalProperties": false,
             "properties": {
@@ -113026,6 +113179,9 @@ var CloudformationSchema = `{
                         },
                         {
                             "$ref": "#/definitions/AWS::WAFv2::IPSet"
+                        },
+                        {
+                            "$ref": "#/definitions/AWS::WAFv2::LoggingConfiguration"
                         },
                         {
                             "$ref": "#/definitions/AWS::WAFv2::RegexPatternSet"
